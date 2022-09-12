@@ -10,7 +10,7 @@ builder.Services.AddCors(opions =>
 {
     opions.AddPolicy(name: "CorsPolicy", policy =>
     {
-        policy.WithOrigins("https://localhost:3000");
+        policy.AllowAnyOrigin();
     });
 });
 
