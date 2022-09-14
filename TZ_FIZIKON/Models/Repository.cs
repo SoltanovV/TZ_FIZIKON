@@ -9,45 +9,17 @@ namespace TZ_FIZIKON.Models
     public class Repository : IRepository
     {
         string connectionString = null;
-
+        protected string sql = "SELECT * FROM Courses WHERE 1 = 1 SELECT * FROM Modules WHERE 1 = 1";
         public Repository(string connectionString)
         {
             this.connectionString = connectionString;
         }
-        public async Task<IEnumerable<Modules>>  GetModel()
-        {
-            using(IDbConnection db = new SqlConnection(connectionString))
-            {
-                try
-                {
-                    var sql = "SELECT * FROM Courses JOIN Modules ON Courses.id = Modules.CourseId";
-                    var res = await db.QueryMultipleAsync(sql);
-                    var mod = res.Read<Modules>();
-                    var cour = res.Read<Courses>();
-
-                    //return cour.Select(c => new Courses
-                    //{
-                    //    Modules = mod.Where(m => m.CourseId == c.Id).ToList()
-                    //});
-                    return mod;
-                   
-                }
-                catch(Exception ex)
-                {
-                    throw;
-                }
-              
-            }
-        }
-
-        public async Task<IEnumerable<Courses>> GetCourses()
+        public async Task<IEnumerable<Courses>> GetCourseSubject()
         {
             using (IDbConnection db = new SqlConnection(connectionString))
             {
                 try
                 {
-                    //var sql = "SELECT * FROM Courses JOIN Modules ON Courses.id = Modules.CourseId";
-                    var sql = " select * from Courses where 1 = 1 select * from Modules where 1 = 1";
                     var res = db.QueryMultiple(sql);
                     var cour = res.Read<Courses>();
                     var mod = res.Read<Modules>();
@@ -62,9 +34,110 @@ namespace TZ_FIZIKON.Models
                         Subject = c.Subject,
                         Title = c.Title,
                         Description = c.Description,
-                        Modules = mod.Where(m => m.CourseId == c.Id).ToList()
+                        Modules = mod.Where(m => m.CourseId == c.Id)
+                        .OrderBy(m => m.Order).ToList()
+                    });
+                    return d.OrderBy(d => d.Subject);
+
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+            }
+        }
+
+        public async Task<IEnumerable<Courses>> GetCourses()
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    var res = db.QueryMultiple(sql);
+                    var cour = res.Read<Courses>();
+                    var mod = res.Read<Modules>();
+                    var d = cour.Select(c => new Courses
+                    {
+                        Id = c.Id,
+                        ExternalId = c.ExternalId,
+                        Genre = c.Genre,
+                        Grade = c.Grade,
+                        Hash = c.Hash,
+                        Status = c.Status,
+                        Subject = c.Subject,
+                        Title = c.Title,
+                        Description = c.Description,
+                        Modules = mod.Where(m => m.CourseId == c.Id)
+                        .OrderBy(m => m.Order).ToList()
                     });
                     return d.OrderBy(d => d.Title);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+            }
+        }
+        public async Task<IEnumerable<Courses>> GetCourseGrade()
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    var res = db.QueryMultiple(sql);
+                    var cour = res.Read<Courses>();
+                    var mod = res.Read<Modules>();
+                    var d = cour.Select(c => new Courses
+                    {
+                        Id = c.Id,
+                        ExternalId = c.ExternalId,
+                        Genre = c.Genre,
+                        Grade = c.Grade,
+                        Hash = c.Hash,
+                        Status = c.Status,
+                        Subject = c.Subject,
+                        Title = c.Title,
+                        Description = c.Description,
+                        Modules = mod.Where(m => m.CourseId == c.Id)
+                        .OrderBy(m => m.Order).ToList()
+                    });
+                    return d.OrderBy(d => d.Grade);
+
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+
+            }
+        }
+        public async Task<IEnumerable<Courses>> GetCourseGenre()
+        {
+            using (IDbConnection db = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    var res = db.QueryMultiple(sql);
+                    var cour = res.Read<Courses>();
+                    var mod = res.Read<Modules>();
+                    var d = cour.Select(c => new Courses
+                    {
+                        Id = c.Id,
+                        ExternalId = c.ExternalId,
+                        Genre = c.Genre,
+                        Grade = c.Grade,
+                        Hash = c.Hash,
+                        Status = c.Status,
+                        Subject = c.Subject,
+                        Title = c.Title,
+                        Description = c.Description,
+                        Modules = mod.Where(m => m.CourseId == c.Id)
+                        .OrderBy(m => m.Order).ToList()
+                    });
+                    return d.OrderBy(d => d.Genre);
+
                 }
                 catch (Exception ex)
                 {
