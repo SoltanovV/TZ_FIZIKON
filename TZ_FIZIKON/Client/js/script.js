@@ -1,4 +1,5 @@
 const URL = 'https://localhost:7239/api/Cours/GetCourses'
+
 const cours = fetch(URL)
     .then((res) => {
        return res.json();  
