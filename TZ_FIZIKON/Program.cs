@@ -5,6 +5,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddCors(opions =>
+{
+    opions.AddPolicy(name: "CorsPolicy", policy =>
+    {
+        policy.AllowAnyOrigin();
+    });
+});
+
 string connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddTransient<IRepository, Repository>(provider => new Repository(connection));
 
@@ -14,6 +23,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseCors("CorsPolicy");
 
 app.UseAuthorization();
 
